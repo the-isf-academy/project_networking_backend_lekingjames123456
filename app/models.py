@@ -61,13 +61,21 @@ class Player(Model):
         self.steals += steals
         self.save()
 
+    # def calculate_per_game_avg(self):
+    #     statslist = [self.points, self.assists, self.rebounds, self.blocks, self.steals]
+    #     for stats in statslist:
+    #         print(stats)
+    #         stats = stats / self.matchesplayed
+    #         stats = round(stats, 1)
+    #         print(stats)
+    #         self.save()
+    #         print(self.points)
+
     def calculate_per_game_avg(self):
-        statslist = [self.points, self.assists, self.rebounds, self.blocks, self.steals]
-        for stats in statslist:
-            print(stats)
-            stats = stats / self.matchesplayed
-            stats = round(stats, 1)
-            print(stats)
-            self.save()
-            print(self.points)
+        self.points = self.points / self.matchesplayed
+        self.assists = self.assists / self.matchesplayed
+        self.rebounds = self.rebounds / self.matchesplayed
+        self.blocks = self.blocks / self.matchesplayed
+        self.steals = self.steals / self.matchesplayed
+        self.save()
         
