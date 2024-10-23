@@ -26,28 +26,67 @@ def playerstats(args):
     else:
         return {'error': 'no player exists'}
 
+@route_get(BASE_URL + 'stats/advanced', args={'player_name':str})
+def advancedstats(args):
+    if player.objects.filter(player=args['player_name']).exists():
+        playerstats = Player.objects.get(player=args['player_name'])
+
+        return {'advanced info': advancedstats.json_response_advanced()}
+
+    else:
+        return {'error': 'no player exists'}
+
+
 @route_get(BASE_URL + 'players')
-def allplayers():
+def allplayers(args):
     allplayers = {
-        'point guard': []
-        'shooting guard': []
-        'small forward': []
-        'power forward': []
+        'point guard': [],
+        'shooting guard': [],
+        'small forward': [],
+        'power forward': [],
         'center': []
     }
 
-    for players in Player.objects.all():
-        if position == 'point guard':
-            allplayers['point guard'].append('player')
-        if position == 'shooting guard':
-            allplayers['shooting guard'].append('player')
-        if position == 'small forward':
-            allplayers['small forward'].append('player')
-        if position == 'power forward':
-            allplayers['power forward'].append('player')
-        if position == 'center':
-            allplayers['center'].append('player')
+    for player in Player.objects.all():
+        if player.position == 'point guard':
+            allplayers['point guard'].append(player.player)
+        if player.position == 'shooting guard':
+            allplayers['shooting guard'].append(player.player)
+        if player.position == 'small forward':
+            allplayers['small forward'].append(player.player)
+        if player.position == 'power forward':
+            allplayers['power forward'].append(player.player)
+        if player.position == 'center':
+            allplayers['center'].append(player.player)
 
     return {'positions': allplayers}
 
-    
+@route_get(BASE_URL + 'leaders')
+def statleaders(args):
+    pointleader = Player.objects.order_by('-points').first()
+    pointleader = pointleader.player
+
+    assistleader = Player.objects.order_by('-assists').first()
+    assistleader = assistleader.player
+
+    reboundleader = Player.objects.order_by('-rebounds').first()
+    reboundleader = reboundleader.player
+
+    blockleader = Player.objects.order_by('-blocks').first()
+    blockleader = blockleader.player
+        
+    stealleader = Player.objects.order_by('-steals').first()
+    stealleader = stealleader.player
+
+    statleaders = {
+        'points': pointleader,
+        'assists': assistleader,
+        'rebounds': reboundleader,
+        'blocks': blockleader,
+        'steals': stealleader
+    }
+
+    return {'leaders': statleaders}
+
+
+
