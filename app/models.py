@@ -40,6 +40,8 @@ class Player(Model):
             'matches_played': self.matchesplayed,
             'shots_taken': self.shotstaken,
             'shots_made': self.shotsmade,
+            'threes_taken': self.threestaken
+            'threes_made': self.threesmade
             'FG%': self.calculate_fg_percent(),
             '3PFG%': self.calculate_3pfg_percent(),
             'Plus_minus': self.plusminus
@@ -59,7 +61,17 @@ class Player(Model):
         self.rebounds += rebounds
         self.blocks += blocks
         self.steals += steals
+        self.matchesplayed += 1
         self.save()
+
+    def add_stats_advanced(self, shotstaken, threestaken, shotsmade, threesmade, plusminus):
+        self.shotstaken += shotstaken
+        self.threestaken += threestaken
+        self.shotsmade += shotsmade
+        self.threesmade += threesmade
+        self.plusminus += plusminus
+
+
 
     # def calculate_per_game_avg(self):
     #     statslist = [self.points, self.assists, self.rebounds, self.blocks, self.steals]

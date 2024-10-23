@@ -16,20 +16,21 @@ def newplayer(args):
 
     return {'player info': newplayer.json_response()}
 
-@route_get(BASE_URL + 'stats', args={'player_name':str})
+@route_get(BASE_URL + 'stats', args={'player':str})
 def playerstats(args):
-    if Player.objects.filter(player=args['player_name']).exists():
-        playerstats = Player.objects.get(player=args['player_name'])
+    if Player.objects.filter(player=args['player']).exists():
+        playerstats = Player.objects.get(player=args['player'])
+        playerstats.calculate_per_game_avg()
 
         return {'player info': playerstats.json_response()}
 
     else:
         return {'error': 'no player exists'}
 
-@route_get(BASE_URL + 'stats/advanced', args={'player_name':str})
+@route_get(BASE_URL + 'stats/advanced', args={'player':str})
 def advancedstats(args):
     if player.objects.filter(player=args['player_name']).exists():
-        playerstats = Player.objects.get(player=args['player_name'])
+        playerstats = Player.objects.get(player=args['player'])
 
         return {'advanced info': advancedstats.json_response_advanced()}
 
@@ -62,7 +63,7 @@ def allplayers(args):
     return {'positions': allplayers}
 
 @route_get(BASE_URL + 'leaders')
-def statleaders(args):
+def statleader(args):
     pointleader = Player.objects.order_by('-points').first()
     pointleader = pointleader.player
 
@@ -88,5 +89,19 @@ def statleaders(args):
 
     return {'leaders': statleaders}
 
+@route_get(BASE_URL + 'input_stats', args={'player':str, 'points':float, 'assists':float, 'rebounds':float, 'blocks':float, 'steals':float})
+def addstats(args):
+    if Player.objects.filter(player=args['player']).exists():
+        addstats = Player.objects.get(player=args['player'])
+        points_input = args['points']
+        assists_input = args['assists']
+        rebounds_input = args['rebounds']
+        blocks_input = args['blocks']
+        steals_input = args['steals']
+        addstats.add_stats(points_input, assists_input, rebounds_input, blocks_input, steals_input)
 
+        return {'success': 'stats successfully added"'}
+
+    else:
+        return {'error': 'no player exists'}
 
